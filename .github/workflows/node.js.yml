@@ -29,7 +29,6 @@ jobs:
     - run: npm ci
     - run: npm install -g @angular/cli@12.2.7
     - run: npm run build --if-present
-    #- run: npm test
     - name: Delete Existing Files
-    - run : sudo sshpass -p ${{ secrets.GCP_VM_SSH }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'rm -rf /var/www/github-action/*'
+      run : sudo sshpass -p ${{ secrets.GCP_VM_SSH }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'rm -rf /var/www/github-action/*'
 
