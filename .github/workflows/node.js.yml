@@ -32,5 +32,3 @@ jobs:
     - name: Delete Existing Files
       run : sudo sshpass -p ${{ secrets.GCP_VM_SSH }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'rm -rf /var/www/github-action/*'
 
- 
- 
