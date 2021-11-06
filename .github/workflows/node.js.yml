@@ -40,7 +40,7 @@ jobs:
             tar -czvf ../../angular-github-actions.tar.gz ./
             cd ..
             cd ..
-            sudo scp -v -o StrictHostKeyChecking=no -r viusasa.tar.gz ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:/var/www/github-action/
+            sudo scp -v -i opensshkey -o StrictHostKeyChecking=no -r viusasa.tar.gz ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:/var/www/github-action/
     - name: Uncompress new Files
       run : sudo ssh -i opensshkey -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'cd /var/www/github-action/ && tar -xzvf angular-github-actions.tar.gz && rm angular-github-actions.tar.gz'
       
