@@ -13,6 +13,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    env:
+      angular_project_name: angular-github-actions
+      server_path: /var/www/github-action
 
     strategy:
       matrix:
@@ -29,20 +33,20 @@ jobs:
     - run: npm ci
     - run: npm install -g @angular/cli@12.2.7
     - run: npm run build --if-present
-    - name: new opensshkey 
+    - name: new file opensshkey 
       run : sudo echo '${{ secrets.GCP_VM_SSH }}' > opensshkey
     - name: Delete Existing Files
-      run : sudo ssh -i opensshkey -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'rm -rf /var/www/github-action/*'
+      run : sudo ssh -i opensshkey -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'sudo rm -rf ${{ env.server_path }}/*'
    #   run : sudo sshpass -p '${{ secrets.GCP_VM_SSH }}' -v ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'rm -rf /var/www/github-action/*'
     - name: Compress and Copy New Files to server
       run : |
-            cd dist/angular-github-actions/
-            tar -czvf ../../angular-github-actions.tar.gz ./
+            cd dist/${{ angular_project_name }}/
+            tar -czvf ../../${{ angular_project_name }}.tar.gz ./
             cd ..
             cd ..
-            sudo scp -v -i opensshkey -o StrictHostKeyChecking=no -r angular-github-actions.tar.gz ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:/var/www/github-action/
+            sudo scp -v -i opensshkey -o StrictHostKeyChecking=no -r ${{ angular_project_name }}.tar.gz ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:${{ env.server_path }}/
     - name: Uncompress new Files
-      run : sudo ssh -i opensshkey -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'cd /var/www/github-action/ && sudo tar -xzvf angular-github-actions.tar.gz && sudo rm angular-github-actions.tar.gz'
+      run : sudo ssh -i opensshkey -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'cd ${{ env.server_path }}/ && sudo tar -xzvf ${{ angular_project_name }}.tar.gz && sudo rm ${{ angular_project_name }}.tar.gz'
       
       
       
