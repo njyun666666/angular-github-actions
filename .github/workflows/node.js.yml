@@ -47,6 +47,8 @@ jobs:
             sudo scp -v -i opensshkey -o StrictHostKeyChecking=no -r ${{ env.angular_project_name }}.tar.gz ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:${{ env.server_path }}/
     - name: Uncompress new Files
       run : sudo ssh -i opensshkey -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'cd ${{ env.server_path }}/ && sudo tar -xzvf ${{ env.angular_project_name }}.tar.gz && sudo rm ${{ env.angular_project_name }}.tar.gz'
+    - name: change file group
+      run : sudo ssh -i opensshkey -o StrictHostKeyChecking=no ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} 'sudo chgrp -R www-data ${{ env.server_path }}'
       
       
       
